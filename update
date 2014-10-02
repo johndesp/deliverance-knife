@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Make sure we have the Gerrit remote set up
+git review -s
+
+# Pull the latest changes
+git pull gerrit master
+
+# Run the installer to make sure we have all the plugins
+./install
+

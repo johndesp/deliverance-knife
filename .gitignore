@@ -1,0 +1,12 @@
+.DS_Store
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+.bundle
+.cache
+.kitchen
+bin
+tmp/

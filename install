@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+begin
+  gem "colorize"
+rescue LoadError
+  puts "Installing ruby gem 'colorize'"
+  system("gem install colorize")
+  Gem.clear_paths
+end
+require 'colorize'
+require 'fileutils'
+
+# Are we running on Windows?
+windows=true if ( /cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM )
+
+# Set up some handy constants for file locations
+INSTALLER_DIR=File.expand_path(File.dirname(__FILE__))
+PLUGIN_DIR=File.expand_path(File.join('~','.chef','plugins','knife'))
+
+puts 'Begin knife kitchen installation'
+
+# Make the knife plugin directory if it doesn't already exist
+if not Dir.exists?(PLUGIN_DIR)
+  puts "  Making plugins directory".light_red
+  puts "    Destination: #{PLUGIN_DIR}".green
+  FileUtils.mkpath PLUGIN_DIR
+end
+
+# Make symlinks in plugins directory
+puts "  Installing plugin symlinks".light_red
+
+Dir.glob(File.join(INSTALLER_DIR,'plugins','knife','*.rb')) do |sourcePlugin|
+  destPlugin=File.join(PLUGIN_DIR,File.basename(sourcePlugin))
+  if File.exists?(destPlugin)
+    puts "    Replacing:  #{destPlugin}".yellow
+  else
+    puts "    Installing: #{destPlugin}".green
+  end
+  if windows
+    system("ln -sf "+sourcePlugin+" "+destPlugin)
+  else
+    FileUtils.ln_s sourcePlugin, destPlugin, force: true
+  end
+end 
+
+# Copy the templates to the knife plugin templates directory
+puts "  Installing template symlinks".light_red
+
+sourceTemplates=File.join(INSTALLER_DIR,'kitchen_templates')
+destTemplates=File.join(PLUGIN_DIR,'kitchen_templates')
+if File.exists?(destTemplates)
+  puts "    Replacing:  #{destTemplates}".yellow
+  if windows
+    system("rm -rf "+destTemplates)
+  else
+    FileUtils.rm destTemplates
+  end
+else
+  puts "    Installing: #{destTemplates}".green
+end
+
+if windows
+  system("cp -r "+sourceTemplates+" "+destTemplates)
+else
+  FileUtils.ln_s sourceTemplates, destTemplates, force: true
+end
+
+puts "Installation complete !!"

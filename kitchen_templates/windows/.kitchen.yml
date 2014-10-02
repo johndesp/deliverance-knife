@@ -1,0 +1,14 @@
+---
+driver_plugin: vagrant
+platforms:
+- name: centos-6.4-selinux
+  driver_config:
+    box: <%= @config[:vagrant_box] %>
+    box_url: <%= @config[:vagrant_box_url] %>
+    http_proxy: <%= @config[:http_proxy] %>
+    https_proxy: <%= @config[:https_proxy] %>
+suites:
+- name: default
+  run_list:
+  - recipe[<%= @config[:cookbook_name] %>]
+  attributes: {}

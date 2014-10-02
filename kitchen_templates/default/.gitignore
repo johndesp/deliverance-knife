@@ -1,0 +1,15 @@
+.DS_Store
+.vagrant
+Berksfile.lock
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+.bundle
+.cache
+.kitchen
+bin
+.kitchen.local.yml
+tmp/

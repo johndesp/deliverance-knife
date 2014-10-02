@@ -1,0 +1,5 @@
+[gerrit]
+host = <%= @config[:reviewhost] %>
+port = 29418
+project = <%= @config[:cookbook_name] %>
+defaultbranch = master
